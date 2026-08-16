@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Whose Costume Is It? — A Cultural Appropriation Lesson</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1C2333;
+    --curtain:#43284D;
+    --curtain-light:#5A3A66;
+    --spotlight:#E7A93A;
+    --spotlight-soft:#F2C978;
+    --paper:#F2ECD9;
+    --paper-dim:#E9E1C9;
+    --text:#211B2E;
+    --text-soft:#5B5468;
+    --brick:#A8422C;
+    --forest:#3E6C4F;
+    --white:#FFFDF7;
+    --radius:2px;
+    --serif:'Fraunces', Georgia, serif;
+    --sans:'Inter', system-ui, sans-serif;
+    --mono:'IBM Plex Mono', monospace;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--text);
+    font-family:var(--sans);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;}
+  h1,h2,h3{font-family:var(--serif); font-weight:700; margin:0 0 .4em 0; letter-spacing:-.01em;}
+  .eyebrow{
+    font-family:var(--mono); text-transform:uppercase; letter-spacing:.14em;
+    font-size:.72rem; color:var(--curtain); font-weight:500;
+  }
+  button{font-family:var(--sans); cursor:pointer;}
+
+  /* ---------- RAIL NAV ---------- */
+  .rail{
+    position:sticky; top:0; z-index:50;
+    background:var(--ink);
+    padding:0 clamp(1rem,4vw,3rem);
+    display:flex; align-items:flex-end; gap:0;
+    overflow-x:auto;
+    box-shadow:0 2px 12px rgba(0,0,0,.25);
+  }
+  .rail-brand{
+    font-family:var(--serif); font-style:italic; color:var(--spotlight-soft);
+    font-size:1rem; padding:.9rem 1.2rem .9rem 0; white-space:nowrap; flex-shrink:0;
+  }
+  .tag{
+    position:relative;
+    background:var(--curtain);
+    color:var(--paper);
+    border:none;
+    font-family:var(--mono);
+    font-size:.78rem;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    padding:.85rem 1.3rem 1.05rem;
+    margin:.6rem .18rem 0;
+    border-radius:8px 8px 0 0;
+    white-space:nowrap;
+    opacity:.6;
+    transition:opacity .2s, background .2s, transform .15s;
+  }
+  .tag::before{
+    content:"";
+    position:absolute; top:-6px; left:50%; transform:translateX(-50%);
+    width:2px; height:8px; background:#00000055;
+  }
+  .tag:hover{opacity:.85;}
+  .tag.active{
+    opacity:1; background:var(--spotlight); color:var(--ink); font-weight:600;
+    transform:translateY(-2px);
+  }
+
+  /* ---------- LAYOUT ---------- */
+  .page{display:none; animation:fadein .35s ease;}
+  .page.active{display:block;}
+  @keyframes fadein{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+  .wrap{max-width:920px; margin:0 auto; padding:0 clamp(1.2rem,4vw,3rem);}
+  section{padding:3.2rem 0;}
+  .rule{border:none; border-top:1px solid #00000018; margin:0;}
+
+  /* ---------- HOME ---------- */
+  .hero{
+    background:radial-gradient(ellipse at 30% -10%, var(--curtain-light), var(--curtain) 55%, var(--ink) 100%);
+    color:var(--paper);
+    padding:4.5rem 0 3.5rem;
+    position:relative;
+    overflow:hidden;
+  }
+  .hero::after{
+    content:"";
+    position:absolute; right:-120px; top:-120px; width:420px; height:420px; border-radius:50%;
+    background:radial-gradient(circle, var(--spotlight) 0%, transparent 68%);
+    opacity:.5;
+  }
+  .hero .wrap{position:relative;}
+  .hero h1{font-size:clamp(2.1rem,5.5vw,3.4rem); color:var(--white); max-width:11ch; line-height:1.02;}
+  .hero p.lede{font-size:1.15rem; max-width:56ch; color:var(--paper-dim);}
+  .hero .eyebrow{color:var(--spotlight-soft);}
+  .cta-row{display:flex; gap:.8rem; flex-wrap:wrap; margin-top:1.8rem;}
+  .btn{
+    display:inline-flex; align-items:center; gap:.5rem;
+    padding:.75rem 1.3rem; border-radius:3px; border:1.5px solid transparent;
+    font-weight:600; font-size:.95rem; text-decoration:none;
+  }
+  .btn-primary{background:var(--spotlight); color:var(--ink);}
+  .btn-primary:hover{background:var(--spotlight-soft);}
+  .btn-ghost{border-color:#ffffff55; color:var(--white); background:transparent;}
+  .btn-ghost:hover{border-color:#ffffffaa;}
+
+  .runway{
+    display:flex; gap:1px; margin-top:2.5rem; border-radius:4px; overflow:hidden;
+  }
+  .runway div{flex:1; height:6px;}
+
+  .overview-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:#00000015; margin-top:0;}
+  .overview-grid .cell{background:var(--paper); padding:1.3rem 1.1rem;}
+  .overview-grid .cell .num{font-family:var(--mono); color:var(--brick); font-size:.78rem;}
+  .overview-grid .cell h3{font-size:1rem; margin-top:.3rem;}
+  .overview-grid .cell p{font-size:.87rem; color:var(--text-soft); margin:.3rem 0 0;}
+  @media (max-width:720px){.overview-grid{grid-template-columns:1fr 1fr;}}
+
+  .objectives-box{
+    background:var(--white); border:1px solid #00000014; border-left:5px solid var(--curtain);
+    padding:1.6rem 1.8rem; margin-top:2.4rem; border-radius:0 4px 4px 0;
+  }
+  .objectives-list{margin:1rem 0 0; padding-left:1.3rem; font-size:.95rem;}
+  .objectives-list li{margin-bottom:.6rem;}
+
+  .competence-box{
+    background:var(--curtain); color:var(--paper); border-radius:6px;
+    padding:1.6rem 1.8rem; margin-top:2.4rem;
+  }
+  .competence-box a{color:var(--spotlight-soft); text-decoration:underline;}
+  .aim-list{display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-top:1.2rem;}
+  @media (max-width:700px){.aim-list{grid-template-columns:1fr;}}
+  .aim-item{background:#ffffff10; border-radius:4px; padding:1rem 1.1rem;}
+  .aim-tag{
+    display:inline-block; font-family:var(--mono); font-size:.68rem; text-transform:uppercase;
+    letter-spacing:.06em; padding:.15rem .5rem; border-radius:3px; margin-bottom:.5rem; font-weight:600;
+  }
+  .aim-tag.both{background:var(--spotlight); color:var(--ink);}
+  .aim-tag.sf{background:#6FA3D8; color:var(--ink);}
+  .aim-tag.yf{background:#8FBF8B; color:var(--ink);}
+  .aim-en{font-size:.92rem; margin:0 0 .5rem;}
+  .aim-no{font-size:.78rem; font-style:italic; opacity:.75; margin:0;}
+
+  /* Connections game */
+  .conn-status{font-family:var(--mono); font-size:.85rem; color:var(--curtain); margin:0 0 1rem;}
+  .conn-solved{display:flex; flex-direction:column; gap:.5rem; margin-bottom:.8rem;}
+  .conn-solved-row{
+    padding:.9rem 1rem; border-radius:4px; font-size:.85rem; text-align:center;
+    display:flex; flex-direction:column; gap:.2rem;
+  }
+  .conn-solved-row .cat-name{font-family:var(--mono); text-transform:uppercase; font-size:.72rem; letter-spacing:.06em; font-weight:700;}
+  .conn-grid{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:.6rem; margin-bottom:1.1rem;
+  }
+  @media (max-width:640px){.conn-grid{grid-template-columns:repeat(2,1fr);}}
+  .conn-tile{
+    background:var(--white); border:1.5px solid #00000020; border-radius:4px;
+    padding:1rem .5rem; font-family:var(--mono); font-size:.78rem; font-weight:600;
+    text-align:center; text-transform:uppercase; letter-spacing:.02em;
+    min-height:56px; display:flex; align-items:center; justify-content:center;
+    transition:transform .1s, background .15s, border-color .15s;
+  }
+  .conn-tile:hover{border-color:var(--curtain);}
+  .conn-tile.selected{background:var(--spotlight); border-color:var(--spotlight); color:var(--ink);}
+  .conn-tile.shake{animation:shake .35s;}
+  .conn-tile.solved{visibility:hidden;}
+  @keyframes shake{
+    0%,100%{transform:translateX(0);} 25%{transform:translateX(-5px);}
+    75%{transform:translateX(5px);}
+  }
+  .conn-controls{display:flex; gap:.7rem; align-items:center; flex-wrap:wrap;}
+  .conn-mistakes{font-family:var(--mono); font-size:.85rem; color:var(--brick);}
+
+  .warmup-box{
+    background:var(--white); border:1px solid #00000014; border-left:5px solid var(--spotlight);
+    padding:1.6rem 1.8rem; margin-top:2rem; border-radius:0 4px 4px 0;
+  }
+  .warmup-box h3{margin-bottom:.6rem;}
+  textarea{
+    width:100%; font-family:var(--sans); font-size:.95rem; padding:.7rem .8rem;
+    border:1px solid #00000030; border-radius:3px; resize:vertical; background:var(--white);
+    color:var(--text);
+  }
+  textarea:focus, input:focus, select:focus{outline:2px solid var(--curtain); outline-offset:1px;}
+
+  /* ---------- STORY ---------- */
+  .dateline{font-family:var(--mono); font-size:.78rem; color:var(--text-soft); letter-spacing:.05em; text-transform:uppercase;}
+  .story-head h1{font-size:clamp(1.7rem,4vw,2.5rem); max-width:18ch;}
+  .story-head p.sub{font-size:1.1rem; color:var(--text-soft); max-width:52ch; font-family:var(--serif); font-style:italic;}
+  .article-body{font-size:1.06rem; max-width:66ch;}
+  .article-body p{margin:0 0 1.1em 0;}
+  .pullquote{
+    font-family:var(--serif); font-style:italic; font-size:1.5rem; line-height:1.35;
+    color:var(--curtain); border-left:4px solid var(--brick); padding:.2rem 0 .2rem 1.3rem;
+    margin:2rem 0; max-width:32ch;
+  }
+  .pullquote cite{display:block; font-family:var(--mono); font-style:normal; font-size:.72rem;
+    text-transform:uppercase; letter-spacing:.08em; color:var(--text-soft); margin-top:.6rem;}
+
+  .quiz-item{background:var(--white); border:1px solid #00000014; border-radius:4px; padding:1.3rem 1.4rem; margin-bottom:1rem;}
+  .quiz-item p.q{font-weight:600; margin:0 0 .8rem;}
+  .tf-row{display:flex; gap:.6rem;}
+  .tf-btn{
+    padding:.5rem 1.1rem; border:1.5px solid var(--curtain); background:transparent; color:var(--curtain);
+    border-radius:3px; font-weight:600; font-size:.88rem;
+  }
+  .tf-btn.correct{background:var(--forest); border-color:var(--forest); color:white;}
+  .tf-btn.wrong{background:var(--brick); border-color:var(--brick); color:white;}
+  .feedback{margin-top:.7rem; font-size:.9rem; padding:.6rem .8rem; border-radius:3px; display:none;}
+  .feedback.show{display:block;}
+  .feedback.good{background:#3E6C4F1a; color:var(--forest);}
+  .feedback.bad{background:#A8422C1a; color:var(--brick);}
+
+  .short-answer summary{cursor:pointer; font-weight:600; color:var(--curtain);}
+  .short-answer[open] summary{margin-bottom:.5rem;}
+
+  .phrase-grid{display:grid; grid-template-columns:1fr 1fr; gap:1.4rem; margin-top:1.5rem;}
+  .phrase-col h4{font-family:var(--mono); text-transform:uppercase; font-size:.75rem; letter-spacing:.06em; color:var(--brick); margin-bottom:.6rem;}
+  .phrase-col ul{padding-left:1.1rem; margin:0; font-size:.93rem;}
+  .phrase-col li{margin-bottom:.5rem;}
+  @media (max-width:640px){.phrase-grid{grid-template-columns:1fr;}}
+
+  /* ---------- GLOSSARY ---------- */
+  .glossary-toolbar{display:flex; gap:.7rem; align-items:center; margin:1.4rem 0 1.8rem; flex-wrap:wrap;}
+  .mode-btn{
+    padding:.55rem 1rem; border-radius:3px; border:1.5px solid var(--curtain); background:transparent;
+    color:var(--curtain); font-weight:600; font-size:.85rem;
+  }
+  .mode-btn.active{background:var(--curtain); color:var(--paper);}
+  .tag-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:1rem;}
+  .term-card{
+    background:var(--white); border:1px solid #00000014; border-radius:4px; padding:1.1rem 1.2rem;
+    position:relative; cursor:pointer; min-height:110px;
+  }
+  .term-card::before{
+    content:""; position:absolute; top:-7px; left:16px; width:14px; height:14px; border-radius:50%;
+    background:var(--paper); border:1.5px solid #00000025;
+  }
+  .term-card h4{font-family:var(--serif); font-size:1.05rem; margin:0 0 .5rem; color:var(--curtain);}
+  .term-card p{font-size:.88rem; color:var(--text-soft); margin:0; display:none;}
+  .term-card.revealed p{display:block;}
+  .term-card .hint{font-size:.78rem; font-family:var(--mono); color:var(--brick);}
+  .term-card.revealed .hint{display:none;}
+
+  .match-wrap{display:grid; grid-template-columns:1fr 1fr; gap:1.5rem;}
+  @media (max-width:640px){.match-wrap{grid-template-columns:1fr;}}
+  .match-list{display:flex; flex-direction:column; gap:.55rem;}
+  .match-item{
+    background:var(--white); border:1.5px solid #00000018; border-radius:3px; padding:.65rem .85rem;
+    font-size:.9rem; text-align:left;
+  }
+  .match-item.term{font-weight:600; font-family:var(--mono); font-size:.82rem; text-transform:uppercase; letter-spacing:.03em;}
+  .match-item.selected{border-color:var(--spotlight); background:#E7A93A22;}
+  .match-item.matched{border-color:var(--forest); background:#3E6C4F14; opacity:.6;}
+  #matchStatus{margin-top:1rem; font-family:var(--mono); font-size:.85rem; color:var(--curtain);}
+
+  /* ---------- TASKS ---------- */
+  .task{margin-bottom:3.2rem; scroll-margin-top:90px;}
+  .task-head{display:flex; align-items:baseline; gap:.9rem; margin-bottom:.4rem;}
+  .task-num{
+    font-family:var(--mono); font-size:1.6rem; color:var(--spotlight); background:var(--ink);
+    padding:.15rem .55rem; border-radius:3px; font-weight:500;
+  }
+  .task h2{font-size:1.5rem;}
+  .task-meta{font-family:var(--mono); font-size:.75rem; color:var(--text-soft); text-transform:uppercase; letter-spacing:.05em; margin:.2rem 0 1.1rem;}
+  .task-body{max-width:70ch;}
+
+  .spectrum-item{background:var(--white); border:1px solid #00000014; border-radius:4px; padding:1.1rem 1.3rem; margin-bottom:.9rem;}
+  .spectrum-item p{margin:0 0 .7rem; font-size:.95rem;}
+  .spectrum-btns{display:flex; gap:.5rem; flex-wrap:wrap;}
+  .spec-btn{
+    padding:.45rem .9rem; border-radius:20px; border:1.5px solid #00000030; background:transparent;
+    font-size:.82rem; color:var(--text-soft);
+  }
+  .spec-btn.chosen{border-color:var(--curtain); background:var(--curtain); color:var(--paper); font-weight:600;}
+
+  .role-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:1rem;}
+  .role-card{
+    background:var(--curtain); color:var(--paper); border-radius:6px; padding:1.3rem 1.4rem;
+    min-height:150px; cursor:pointer; transition:transform .15s;
+  }
+  .role-card:hover{transform:translateY(-3px);}
+  .role-card h4{font-family:var(--serif); color:var(--spotlight-soft); margin:0 0 .5rem; font-size:1.1rem;}
+  .role-card p{font-size:.85rem; margin:0; opacity:.85; display:none;}
+  .role-card.open p{display:block;}
+  .role-card .toggle-hint{font-family:var(--mono); font-size:.72rem; color:var(--spotlight-soft); opacity:.8;}
+  .role-card.open .toggle-hint{display:none;}
+
+  .scenario{background:var(--white); border:1px solid #00000014; border-radius:4px; padding:1.3rem 1.4rem; margin-bottom:1.1rem;}
+  .scenario h4{font-size:1rem; margin:0 0 .5rem; font-family:var(--serif);}
+  .scenario .letter{font-family:var(--mono); color:var(--brick); margin-right:.3rem;}
+  .judge-row{display:flex; gap:.5rem; margin:.7rem 0; flex-wrap:wrap;}
+  .judge-btn{padding:.4rem .85rem; border-radius:3px; border:1.5px solid #00000030; background:transparent; font-size:.82rem;}
+  .judge-btn.chosen{background:var(--brick); border-color:var(--brick); color:white; font-weight:600;}
+  .framework{
+    background:var(--paper-dim); border:1px dashed var(--curtain); border-radius:4px;
+    padding:1.1rem 1.3rem; margin:1.4rem 0 1.8rem; font-size:.92rem;
+  }
+  .framework h4{margin:0 0 .5rem; font-size:.95rem; font-family:var(--mono); text-transform:uppercase; letter-spacing:.05em; color:var(--curtain);}
+  .framework ul{margin:0; padding-left:1.2rem;}
+  .framework li{margin-bottom:.3rem;}
+
+  .slider-wrap{margin:1.6rem 0;}
+  input[type=range]{width:100%; accent-color:var(--brick);}
+  .slider-labels{display:flex; justify-content:space-between; font-size:.8rem; color:var(--text-soft); font-family:var(--mono);}
+  #debateReadout{font-family:var(--serif); font-style:italic; color:var(--curtain); font-size:1.1rem; margin-top:.6rem;}
+
+  .source-links{display:grid; grid-template-columns:repeat(3,1fr); gap:.9rem; margin-top:1.1rem;}
+  @media (max-width:700px){.source-links{grid-template-columns:1fr;}}
+  .source-link{
+    display:flex; flex-direction:column; gap:.3rem;
+    background:var(--white); border:1.5px solid #00000018; border-radius:4px;
+    padding:1rem 1.1rem; text-decoration:none; color:var(--text);
+    transition:border-color .15s, transform .15s;
+  }
+  .source-link:hover{border-color:var(--curtain); transform:translateY(-2px);}
+  .source-outlet{font-family:var(--serif); font-weight:600; font-size:1rem; color:var(--curtain);}
+  .source-desc{font-size:.78rem; color:var(--text-soft);}
+  .compare-grid{display:flex; flex-direction:column; gap:1rem; margin-top:1.2rem;}
+  .compare-item label{display:block; font-weight:600; font-size:.9rem; margin-bottom:.4rem;}
+
+  .prompt-select{display:flex; gap:.6rem; margin-bottom:1rem; flex-wrap:wrap;}
+  .prompt-chip{padding:.5rem 1rem; border-radius:20px; border:1.5px solid var(--curtain); background:transparent; font-size:.85rem; color:var(--curtain);}
+  .prompt-chip.chosen{background:var(--curtain); color:var(--paper); font-weight:600;}
+  #promptText{font-style:italic; color:var(--text-soft); margin-bottom:.8rem; font-family:var(--serif); font-size:1.02rem;}
+  .wordcount{font-family:var(--mono); font-size:.78rem; color:var(--text-soft); margin-top:.4rem;}
+
+  .exit-grid{display:grid; grid-template-columns:1fr; gap:1rem;}
+  .exit-item label{display:block; font-weight:600; font-size:.9rem; margin-bottom:.4rem;}
+
+  footer{background:var(--ink); color:var(--paper-dim); padding:2.5rem 0; font-size:.85rem;}
+  footer .wrap{display:flex; justify-content:space-between; flex-wrap:wrap; gap:1rem;}
+  footer .eyebrow{color:var(--spotlight-soft);}
+
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto;} .page{animation:none;} .role-card:hover{transform:none;}
+  }
+</style>
+</head>
+<body>
+
+<nav class="rail" id="rail">
+  <span class="rail-brand">Backstage Pass</span>
+  <button class="tag active" data-page="home">Intro</button>
+  <button class="tag" data-page="story">The Story</button>
+  <button class="tag" data-page="glossary">Glossary</button>
+  <button class="tag" data-page="tasks">Tasks</button>
+</nav>
+
+<!-- ============ HOME ============ -->
+<div class="page active" id="page-home">
+  <div class="hero">
+    <div class="wrap">
+      <p class="eyebrow">English Vg1 · Cultural Appropriation</p>
+      <h1>Whose Costume Is It?</h1>
+      <p class="lede">A national costume competition. A feather headdress. An apology heard around the internet. Today you'll use a real news story to dig into one of the trickiest questions in modern culture: where is the line between honouring a tradition and taking it?</p>
+      <div class="cta-row">
+        <button class="btn btn-primary" onclick="goTo('story')">Start with the story →</button>
+        <button class="btn btn-ghost" onclick="goTo('glossary')">Check the glossary first</button>
+      </div>
+      <div class="runway">
+        <div style="background:var(--spotlight)"></div><div style="background:var(--brick)"></div>
+        <div style="background:var(--forest)"></div><div style="background:var(--spotlight-soft)"></div>
+        <div style="background:var(--curtain-light)"></div>
+      </div>
+    </div>
+  </div>
+
+  <section class="wrap">
+    <p class="eyebrow" style="margin-bottom:.8rem;">Today's running order · 90 minutes</p>
+    <div class="overview-grid">
+      <div class="cell"><p class="num">01</p><h3>Intro</h3><p>Warm-up prediction. 5 min</p></div>
+      <div class="cell"><p class="num">02</p><h3>The Story</h3><p>Read, check, language focus. 20 min</p></div>
+      <div class="cell"><p class="num">03</p><h3>Glossary</h3><p>Key words and a matching game. 10 min</p></div>
+      <div class="cell"><p class="num">04</p><h3>Tasks</h3><p>Seven activities: sorting, roles, debate, media compare, writing. 65 min</p></div>
+    </div>
+
+    <div class="objectives-box">
+      <p class="eyebrow" style="margin-bottom:.4rem;">By the end of this lesson</p>
+      <h3>Learning objectives</h3>
+      <ol class="objectives-list">
+        <li><strong>Define and distinguish</strong> cultural appropriation from cultural appreciation, using precise vocabulary from today's glossary.</li>
+        <li><strong>Analyse a real news story</strong> and identify the different perspectives and voices involved in it.</li>
+        <li><strong>Compare how different media outlets</strong> frame the same event, and evaluate their language, tone and source reliability.</li>
+        <li><strong>Construct and defend a reasoned opinion</strong> — in speech and in writing — on a genuinely debatable cultural question.</li>
+      </ol>
+    </div>
+
+    <div class="competence-box">
+      <p class="eyebrow" style="margin-bottom:.4rem;">Curriculum · LK20, English (ENG01-06)</p>
+      <h3>Competence aims covered in this lesson</h3>
+      <p style="margin-top:0; color:var(--text-soft); font-size:.92rem; max-width:62ch;">Selected from Udir's Vg1 competence aims for the <a href="https://www.udir.no/lk20/eng01-06/kompetansemaal-og-vurdering/kv1035" target="_blank" rel="noopener">studieforberedende (academic)</a> and <a href="https://www.udir.no/lk20/eng01-06/kompetansemaal-og-vurdering/kv1034" target="_blank" rel="noopener">yrkesfaglige (vocational)</a> programmes.</p>
+      <div class="aim-list">
+        <div class="aim-item">
+          <span class="aim-tag both">SF + YF</span>
+          <p class="aim-en">Read, discuss and reflect on content and stylistic devices in different types of texts, including self-chosen texts.</p>
+          <p class="aim-no">"lese, diskutere og reflektere over innhold og virkemidler i ulike typer tekster, inkludert selvvalgte tekster"</p>
+        </div>
+        <div class="aim-item">
+          <span class="aim-tag both">SF + YF</span>
+          <p class="aim-en">Use a variety of sources in a critical, appropriate and responsible way.</p>
+          <p class="aim-no">"bruke ulike kilder på en kritisk, hensiktsmessig og etterrettelig måte"</p>
+        </div>
+        <div class="aim-item">
+          <span class="aim-tag sf">SF</span>
+          <p class="aim-en">Read and compare different non-fiction texts on the same topic from different sources, and critically assess how reliable the sources are.</p>
+          <p class="aim-no">"lese og sammenligne ulike sakprosatekster om samme emne fra forskjellige kilder og kritisk vurdere hvor pålitelige kildene er"</p>
+        </div>
+        <div class="aim-item">
+          <span class="aim-tag yf">YF</span>
+          <p class="aim-en">Account for other people's arguments, and use and follow up on others' contributions in conversations and discussions on work-relevant topics.</p>
+          <p class="aim-no">"gjøre rede for andres argumentasjon og bruke og følge opp andres innspill i samtaler og diskusjoner om yrkesrelevante emner"</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="warmup-box">
+      <p class="eyebrow" style="margin-bottom:.4rem;">Before you read — predict</p>
+      <h3>What do you already think?</h3>
+      <p style="margin-top:0;">A pageant contestant wore a feather headdress and face paint as part of a "national costume" competition. Someone in the audience — a former winner from an Indigenous nation — stopped the show to object. <strong>Before reading further</strong>, jot down your first reaction: is wearing another culture's traditional clothing ever okay? When might it become a problem?</p>
+      <textarea rows="3" placeholder="Type your prediction here — you won't be marked on this, it's just to compare with your thinking at the end of the lesson."></textarea>
+    </div>
+  </section>
+</div>
+
+<!-- ============ STORY ============ -->
+<div class="page" id="page-story">
+  <section class="wrap">
+    <p class="dateline">BBC News · World · 5 days ago · <a href="https://www.bbc.com/news/articles/cx2kv12nqx6o" target="_blank" rel="noopener" style="color:var(--curtain); text-decoration:underline;">Read the original article ↗</a></p>
+    <div class="story-head">
+      <h1>Miss Universe Canada contestants apologise for wearing indigenous dress</h1>
+      <p class="sub">A costume segment meant to celebrate Canadian heritage instead sparked a public reckoning about respect, sacred symbols, and who gets to wear what.</p>
+    </div>
+
+    <div class="article-body" style="margin-top:2rem;">
+      <p><strong>What happened.</strong> During the national costume round of the Miss Universe Canada pageant, two contestants stepped onto the runway in outfits inspired by Indigenous culture. One wore a feathered headdress — traditionally reserved for respected Indigenous leaders — along with a red handprint painted across her face, a symbol linked to the Missing and Murdered Indigenous Women (MMIW) movement. The other wore an all-fur "Arctic Beauty" costume with mukluk boots and braided hair, a hairstyle that carries deep cultural meaning for many First Nations people.</p>
+
+      <p><strong>Who spoke up.</strong> Ashley Callingbull, a Plains Cree woman from the Enoch Cree Nation and the pageant's first-ever Indigenous winner, was co-hosting the event. She paused the show to address what she'd seen, telling the audience directly that times have changed and that better judgement was expected.</p>
+
+      <div class="pullquote">
+        "It's 2026, we should know better."
+        <cite>— Ashley Callingbull, pageant co-host and former winner</cite>
+      </div>
+
+      <p><strong>How the contestants responded.</strong> Both women apologised publicly. One wrote on social media that she recognised her costume had caused real hurt within the Indigenous community and that she was grateful for what she'd learned from the experience. The other said her intention had been to celebrate Canada's first peoples, not to disrespect them — but she apologised regardless.</p>
+
+      <p><strong>How the organisers responded.</strong> Miss Universe Canada issued a statement saying any offence was unintentional, then went further: the pageant director publicly took full responsibility for the mistake and announced two concrete changes. First, a detailed costume guide will set clear rules for every future competition. Second, Callingbull herself has been invited to become the official cultural liaison for the costume segment going forward — meaning she'll help review and approve designs before they ever reach the stage.</p>
+
+      <p><strong>Why this isn't new.</strong> This is not the first time the competition has faced this exact criticism. Back in 2015, a contestant wore a costume based on a totem pole, which the organisation described at the time as a "misunderstanding" connected to her own heritage. Even then, Callingbull had suggested the pageant hire a cultural consultant — an idea that has now, more than a decade later, become reality.</p>
+    </div>
+
+    <hr class="rule" style="margin:2.4rem 0;">
+
+    <h2 style="font-size:1.4rem;">Check your understanding</h2>
+    <p style="color:var(--text-soft); margin-top:-.5rem; font-size:.92rem;">Click True or False. You'll get instant feedback.</p>
+
+    <div id="quizContainer"></div>
+
+    <details class="short-answer" style="margin-top:1.6rem;">
+      <summary>Think deeper: two short-answer questions (click to reveal after discussing with a partner)</summary>
+      <ol style="font-size:.95rem;">
+        <li>Why do you think Callingbull's objection carried particular weight, compared to if a random audience member had complained?</li>
+        <li>The article mentions <em>three</em> specific cultural elements in the costumes (the headdress, the handprint, the braids). Why might it matter that a news report lists them individually instead of just saying "an Indigenous-style costume"?</li>
+      </ol>
+    </details>
+
+    <hr class="rule" style="margin:2.6rem 0;">
+
+    <h2 style="font-size:1.4rem;">Language focus: apologising in English</h2>
+    <p style="color:var(--text-soft); margin-top:-.4rem; font-size:.92rem; max-width:60ch;">Notice how the people in this story chose their words carefully. These phrases are useful whenever you need to take responsibility — or raise a concern — in formal English.</p>
+    <div class="phrase-grid">
+      <div class="phrase-col">
+        <h4>Taking responsibility</h4>
+        <ul>
+          <li>"I acknowledge that my actions caused hurt."</li>
+          <li>"It was never my intention to offend."</li>
+          <li>"I take full responsibility for the mistake."</li>
+          <li>"I appreciate what I have learned from this."</li>
+        </ul>
+      </div>
+      <div class="phrase-col">
+        <h4>Raising a concern respectfully</h4>
+        <ul>
+          <li>"I was concerned when I saw..."</li>
+          <li>"This raises an important question about..."</li>
+          <li>"We should know better than to..."</li>
+          <li>"It's important that we acknowledge..."</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ============ GLOSSARY ============ -->
+<div class="page" id="page-glossary">
+  <section class="wrap">
+    <p class="eyebrow">Key vocabulary</p>
+    <h1 style="font-size:1.9rem;">The Costume Rack</h1>
+    <p style="max-width:60ch; color:var(--text-soft);">Every term below appeared in — or is essential for discussing — today's story. Switch between <strong>Study mode</strong> (click a tag to reveal its meaning) and <strong>Match mode</strong> (a quick matching game) using the buttons below.</p>
+
+    <div class="glossary-toolbar">
+      <button class="mode-btn active" id="studyModeBtn" onclick="setGlossaryMode('study')">Study mode</button>
+      <button class="mode-btn" id="matchModeBtn" onclick="setGlossaryMode('match')">Match mode</button>
+      <button class="mode-btn" id="connModeBtn" onclick="setGlossaryMode('conn')">Connections game</button>
+    </div>
+
+    <div id="studyMode" class="tag-grid"></div>
+    <div id="matchMode" style="display:none;">
+      <div class="match-wrap">
+        <div class="match-list" id="matchTerms"></div>
+        <div class="match-list" id="matchDefs"></div>
+      </div>
+      <p id="matchStatus">Click a term, then click its matching definition.</p>
+    </div>
+
+    <div id="connMode" style="display:none;">
+      <p style="max-width:60ch; color:var(--text-soft); font-size:.92rem;">Find groups of four! Select four words you think belong together, then check your answer. Each group hides a category connected to today's story.</p>
+      <p class="conn-status" id="connStatus">Select 4 words, then press Check.</p>
+      <div class="conn-solved" id="connSolved"></div>
+      <div class="conn-grid" id="connGrid"></div>
+      <div class="conn-controls">
+        <button class="btn btn-primary" style="padding:.6rem 1.2rem;" onclick="checkConnections()">Check</button>
+        <button class="mode-btn" style="padding:.6rem 1rem;" onclick="deselectAllConn()">Deselect all</button>
+        <button class="mode-btn" style="padding:.6rem 1rem;" onclick="shuffleConn()">Shuffle</button>
+        <span class="conn-mistakes" id="connMistakes">Mistakes remaining: 4</span>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ============ TASKS ============ -->
+<div class="page" id="page-tasks">
+  <section class="wrap">
+    <p class="eyebrow">Seven activities · 65 minutes</p>
+    <h1 style="font-size:1.9rem;">On the Runway</h1>
+    <p style="max-width:60ch; color:var(--text-soft);">Work through these in order, or jump to any activity your teacher assigns. Most have no single "correct" answer — the goal is to reason clearly and defend your thinking.</p>
+
+    <!-- TASK 1 -->
+    <div class="task" id="task1">
+      <div class="task-head"><span class="task-num">01</span><h2>Categorise It</h2></div>
+      <p class="task-meta">Pairs · 8 minutes</p>
+      <div class="task-body">
+        <p>For each statement below, decide where it sits. There's no single right answer — discuss with a partner and be ready to explain your reasoning to the class.</p>
+        <div id="spectrumContainer"></div>
+      </div>
+    </div>
+
+    <!-- TASK 2 -->
+    <div class="task" id="task2">
+      <div class="task-head"><span class="task-num">02</span><h2>Step Into Their Shoes</h2></div>
+      <p class="task-meta">Small groups · 10 minutes</p>
+      <div class="task-body">
+        <p>Click a card to reveal that person's perspective on the events. In your group, each person should "become" one voice, then discuss: <em>if all four of you were in a room together, where would you disagree?</em></p>
+        <div class="role-grid" id="roleGrid"></div>
+      </div>
+    </div>
+
+    <!-- TASK 3 -->
+    <div class="task" id="task3">
+      <div class="task-head"><span class="task-num">03</span><h2>Where's the Line?</h2></div>
+      <p class="task-meta">Individual, then pairs · 15 minutes</p>
+      <div class="task-body">
+        <p>Here are five new situations — none from the article. For each, decide: appreciation, appropriation, or genuinely hard to say? Use the framework below to justify your answer in the box provided.</p>
+        <div class="framework">
+          <h4>A reasoning framework</h4>
+          <ul>
+            <li><strong>Invitation:</strong> Were members of that culture involved, consulted, or did they invite this?</li>
+            <li><strong>Sacredness:</strong> Is the item spiritual, ceremonial, or "just" decorative in its original context?</li>
+            <li><strong>Power:</strong> Does the borrower belong to a historically dominant group, relative to the culture being borrowed from?</li>
+            <li><strong>Benefit:</strong> Who profits, gets credit, or gains status from this — and who doesn't?</li>
+          </ul>
+        </div>
+        <div id="scenarioContainer"></div>
+      </div>
+    </div>
+
+    <!-- TASK 4 -->
+    <div class="task" id="task4">
+      <div class="task-head"><span class="task-num">04</span><h2>The Debate Rail</h2></div>
+      <p class="task-meta">Whole class · 10 minutes</p>
+      <div class="task-body">
+        <p>Set the slider to show where <em>you</em> land on the two contestants' original costume choices, then write one sentence defending your position. Your teacher may ask you to physically line up across the room in this order for a live debate.</p>
+        <div class="slider-wrap">
+          <input type="range" min="0" max="100" value="50" id="debateSlider" oninput="updateDebate(this.value)">
+          <div class="slider-labels"><span>Honest mistake, poorly researched</span><span>Deliberate disrespect</span></div>
+        </div>
+        <p id="debateReadout">50 — right in the middle</p>
+        <textarea rows="2" placeholder="Defend your position in one or two sentences..."></textarea>
+      </div>
+    </div>
+
+    <!-- TASK 5 -->
+    <div class="task" id="task5">
+      <div class="task-head"><span class="task-num">05</span><h2>Same Story, Different Lens</h2></div>
+      <p class="task-meta">Pairs · 12 minutes</p>
+      <div class="task-body">
+        <p>The same event gets reported differently depending on who's telling it. Choose <strong>two</strong> of the three links below, read both articles, then compare them using the questions underneath.</p>
+        <div class="source-links">
+          <a href="https://www.cbc.ca/news/indigenous/miss-universe-canada-ashley-callingbull-emma-morrison-headdress-cultural-appropriation-9.7300243" target="_blank" rel="noopener" class="source-link">
+            <span class="source-outlet">CBC News</span>
+            <span class="source-desc">Canadian public broadcaster · Indigenous affairs desk</span>
+          </a>
+          <a href="https://nypost.com/2026/08/12/world-news/miss-universe-canada-contestants-in-indigenous-costumes-slammed-for-cultural-appropriation/" target="_blank" rel="noopener" class="source-link">
+            <span class="source-outlet">New York Post</span>
+            <span class="source-desc">US tabloid-style newspaper · World news</span>
+          </a>
+          <a href="https://www.independent.co.uk/life-style/ashley-callingbull-miss-universe-canada-costumes-appropriation-b3032760.html" target="_blank" rel="noopener" class="source-link">
+            <span class="source-outlet">The Independent</span>
+            <span class="source-desc">UK newspaper · Lifestyle section</span>
+          </a>
+        </div>
+        <p style="margin-top:1.4rem; font-size:.9rem; color:var(--text-soft);">Which two did you choose?</p>
+        <div class="prompt-select" id="mediaChoice"></div>
+
+        <div class="compare-grid">
+          <div class="compare-item">
+            <label>Compare the headlines. What word choices stand out, and what tone does each headline set before you've even read the article?</label>
+            <textarea rows="2"></textarea>
+          </div>
+          <div class="compare-item">
+            <label>Whose voice or quotes seem most central in each version — the contestants, Callingbull, the pageant, or someone else?</label>
+            <textarea rows="2"></textarea>
+          </div>
+          <div class="compare-item">
+            <label>Is anything included in one article but left out of the other (extra background, a different angle, more or fewer direct quotes)?</label>
+            <textarea rows="2"></textarea>
+          </div>
+          <div class="compare-item">
+            <label>Based on tone and word choice alone, which outlet feels more neutral, and which feels more opinionated? Give one piece of evidence for your answer.</label>
+            <textarea rows="2"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TASK 6 -->
+    <div class="task" id="task6">
+      <div class="task-head"><span class="task-num">06</span><h2>Write It</h2></div>
+      <p class="task-meta">Individual · 10 minutes</p>
+      <div class="task-body">
+        <p>Choose one writing task. Aim for 100–150 words in clear, formal English.</p>
+        <div class="prompt-select" id="promptSelect"></div>
+        <p id="promptText"></p>
+        <textarea rows="7" id="writingArea" placeholder="Start writing here..." oninput="updateWordCount()"></textarea>
+        <p class="wordcount" id="wordCount">0 words</p>
+      </div>
+    </div>
+
+    <!-- TASK 7 -->
+    <div class="task" id="task7">
+      <div class="task-head"><span class="task-num">07</span><h2>Exit Ticket</h2></div>
+      <p class="task-meta">Individual · 5 minutes</p>
+      <div class="task-body">
+        <p>Before you leave — the classic 3-2-1. Compare your final answer to what you wrote in the warm-up prediction at the start.</p>
+        <div class="exit-grid">
+          <div class="exit-item">
+            <label>3 things you learned today</label>
+            <textarea rows="2"></textarea>
+          </div>
+          <div class="exit-item">
+            <label>2 questions you still have</label>
+            <textarea rows="2"></textarea>
+          </div>
+          <div class="exit-item">
+            <label>1 change you'll make to how you talk or think about other cultures</label>
+            <textarea rows="2"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div>
+      <p class="eyebrow">Source</p>
+      <p style="margin:.2rem 0 0;">Based on BBC News: "Miss Universe Canada contestants apologise for wearing indigenous dress." Read the full original article here: <a href="https://www.bbc.com/news/articles/cx2kv12nqx6o" target="_blank" rel="noopener" style="color:var(--spotlight-soft); text-decoration:underline;">bbc.com/news/articles/cx2kv12nqx6o</a></p>
+    </div>
+    <div>
+      <p class="eyebrow">English Vg1</p>
+      <p style="margin:.2rem 0 0;">Cultural appropriation &amp; critical media literacy</p>
+      <p style="margin:.6rem 0 0; opacity:.7;">Created by Barbara Anna Zielonka</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ---------- NAV ----------
+  function goTo(pageId){
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    document.getElementById('page-'+pageId).classList.add('active');
+    document.querySelectorAll('.tag').forEach(t=>t.classList.remove('active'));
+    document.querySelector('.tag[data-page="'+pageId+'"]').classList.add('active');
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+  document.querySelectorAll('.tag').forEach(t=>{
+    t.addEventListener('click', ()=>goTo(t.dataset.page));
+  });
+
+  // ---------- QUIZ ----------
+  const quizData = [
+    {q:"Both contestants involved apologised publicly after the pageant.", a:true,
+     fb:{good:"Correct — both wrote apologies, though they used slightly different wording.", bad:"Not quite — both contestants did apologise publicly, in social media posts."}},
+    {q:"The person who first raised the issue was a journalist unconnected to the pageant.", a:false,
+     fb:{good:"Correct — it was Ashley Callingbull, a former winner who was co-hosting the show.", bad:"Not quite — it was Ashley Callingbull, the pageant's first Indigenous winner, co-hosting the event."}},
+    {q:"This is the first time Miss Universe Canada has faced criticism like this.", a:false,
+     fb:{good:"Correct — a similar controversy happened in 2015 with a totem-pole-themed costume.", bad:"Not quite — a very similar incident happened back in 2015."}},
+    {q:"The pageant organisers have promised concrete changes for future competitions.", a:true,
+     fb:{good:"Correct — a costume guide is coming, and Callingbull will act as a cultural liaison.", bad:"Not quite — they actually promised two specific changes: new guidelines and a liaison role for Callingbull."}},
+  ];
+  const quizContainer = document.getElementById('quizContainer');
+  quizData.forEach((item,i)=>{
+    const div = document.createElement('div');
+    div.className='quiz-item';
+    div.innerHTML = `<p class="q">${i+1}. ${item.q}</p>
+      <div class="tf-row">
+        <button class="tf-btn" data-val="true">True</button>
+        <button class="tf-btn" data-val="false">False</button>
+      </div>
+      <div class="feedback"></div>`;
+    quizContainer.appendChild(div);
+    div.querySelectorAll('.tf-btn').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const chosen = btn.dataset.val === 'true';
+        const correct = chosen === item.a;
+        div.querySelectorAll('.tf-btn').forEach(b=>{b.classList.remove('correct','wrong'); b.disabled=true;});
+        btn.classList.add(correct ? 'correct' : 'wrong');
+        const fb = div.querySelector('.feedback');
+        fb.textContent = correct ? item.fb.good : item.fb.bad;
+        fb.classList.add('show', correct ? 'good':'bad');
+      });
+    });
+  });
+
+  // ---------- GLOSSARY ----------
+  const terms = [
+    {term:"Cultural appropriation", def:"Using or wearing elements of a culture that isn't your own — especially sacred or meaningful ones — without permission, credit, or understanding, often by a more dominant group."},
+    {term:"Cultural appreciation", def:"Showing genuine respect for another culture, usually by learning about it, crediting its origins, and being invited or welcomed to take part."},
+    {term:"Indigenous", def:"Relating to the original, native peoples of a land — for example, First Nations peoples in Canada."},
+    {term:"Headdress", def:"A decorated head covering; in many Indigenous nations a feathered headdress is a sacred item earned through respect and leadership, not just a fashion accessory."},
+    {term:"Regalia", def:"Traditional ceremonial clothing or objects that carry deep cultural or spiritual meaning."},
+    {term:"Reconciliation", def:"The process of repairing a relationship after harm — often used to describe healing between Indigenous peoples and settler societies."},
+    {term:"Solidarity", def:"Support and unity shown with a group, especially one facing hardship or injustice."},
+    {term:"MMIW", def:"Missing and Murdered Indigenous Women — a movement raising awareness of the disproportionate number of Indigenous women who go missing or are killed."},
+    {term:"To cause offence", def:"To upset or insult someone — sometimes unintentionally."},
+    {term:"Accountability", def:"Accepting responsibility for your actions and their consequences."},
+    {term:"Liaison", def:"A person who acts as a link between two groups, helping them communicate and understand each other."},
+    {term:"Heritage", def:"Traditions, culture and history passed down through generations."},
+    {term:"Stereotype", def:"An oversimplified, often inaccurate idea about a group of people."},
+    {term:"Power imbalance", def:"A situation where one group holds significantly more power, privilege or influence than another."},
+  ];
+
+  const studyMode = document.getElementById('studyMode');
+  terms.forEach(t=>{
+    const card = document.createElement('div');
+    card.className='term-card';
+    card.innerHTML = `<h4>${t.term}</h4><p class="hint">Tap to reveal ↓</p><p>${t.def}</p>`;
+    card.addEventListener('click', ()=>card.classList.toggle('revealed'));
+    studyMode.appendChild(card);
+  });
+
+  function setGlossaryMode(mode){
+    document.getElementById('studyMode').style.display = mode==='study' ? 'grid':'none';
+    document.getElementById('matchMode').style.display = mode==='match' ? 'block':'none';
+    document.getElementById('connMode').style.display = mode==='conn' ? 'block':'none';
+    document.getElementById('studyModeBtn').classList.toggle('active', mode==='study');
+    document.getElementById('matchModeBtn').classList.toggle('active', mode==='match');
+    document.getElementById('connModeBtn').classList.toggle('active', mode==='conn');
+  }
+
+  // Matching game — use a subset of 6 for a manageable round
+  const matchSet = terms.slice(0,6);
+  let selectedTerm = null, matchedCount = 0;
+  const shuffledDefs = [...matchSet].sort(()=>Math.random()-0.5);
+  const termsCol = document.getElementById('matchTerms');
+  const defsCol = document.getElementById('matchDefs');
+
+  matchSet.forEach((t,i)=>{
+    const el = document.createElement('button');
+    el.className='match-item term';
+    el.textContent = t.term;
+    el.dataset.term = t.term;
+    el.addEventListener('click', ()=>{
+      if(el.classList.contains('matched')) return;
+      termsCol.querySelectorAll('.match-item').forEach(x=>x.classList.remove('selected'));
+      el.classList.add('selected');
+      selectedTerm = t.term;
+      document.getElementById('matchStatus').textContent = `Selected "${t.term}" — now click its definition.`;
+    });
+    termsCol.appendChild(el);
+  });
+
+  shuffledDefs.forEach(t=>{
+    const el = document.createElement('button');
+    el.className='match-item';
+    el.textContent = t.def;
+    el.addEventListener('click', ()=>{
+      if(el.classList.contains('matched')) return;
+      if(!selectedTerm){ document.getElementById('matchStatus').textContent = 'Pick a term on the left first.'; return; }
+      const status = document.getElementById('matchStatus');
+      if(t.term === selectedTerm){
+        el.classList.add('matched');
+        termsCol.querySelector(`[data-term="${CSS.escape(selectedTerm)}"]`).classList.add('matched');
+        termsCol.querySelector(`[data-term="${CSS.escape(selectedTerm)}"]`).classList.remove('selected');
+        matchedCount++;
+        status.textContent = matchedCount===matchSet.length ? 'All matched — nicely done!' : 'Correct! Pick the next term.';
+        selectedTerm = null;
+      } else {
+        status.textContent = 'Not a match — try again.';
+        el.style.borderColor = 'var(--brick)';
+        setTimeout(()=>{el.style.borderColor='';},500);
+      }
+    });
+    defsCol.appendChild(el);
+  });
+
+  // ---------- TASK 1: Categorise It ----------
+  const spectrumItems = [
+    "A contestant wears a feathered headdress as a costume, without consulting anyone from an Indigenous nation.",
+    "A contestant paints a symbol linked to a real activist movement (MMIW) on her face as part of a beauty pageant look.",
+    "The pageant apologises, sets clear future guidelines, and invites an Indigenous former winner to help review costumes.",
+    "A contestant says her costume was meant to \"celebrate\" a culture she doesn't belong to.",
+  ];
+  const spectrumContainer = document.getElementById('spectrumContainer');
+  spectrumItems.forEach((s,i)=>{
+    const div = document.createElement('div');
+    div.className='spectrum-item';
+    div.innerHTML = `<p>${s}</p>
+      <div class="spectrum-btns">
+        <button class="spec-btn" data-choice="appreciation">Appreciation</button>
+        <button class="spec-btn" data-choice="depends">Depends / complicated</button>
+        <button class="spec-btn" data-choice="appropriation">Appropriation</button>
+      </div>`;
+    div.querySelectorAll('.spec-btn').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        div.querySelectorAll('.spec-btn').forEach(b=>b.classList.remove('chosen'));
+        btn.classList.add('chosen');
+      });
+    });
+    spectrumContainer.appendChild(div);
+  });
+
+  // ---------- TASK 2: Roles ----------
+  const roles = [
+    {name:"Karisa — the contestant in the headdress", text:"\"I didn't think about where the headdress came from — I just thought it looked powerful on stage. Now I understand it wasn't mine to wear, and I'm trying to learn from that.\""},
+    {name:"Ashley Callingbull — former winner, now liaison", text:"\"I wasn't trying to embarrass anyone. But when something sacred gets treated as a costume, someone has to say something — otherwise nothing changes.\""},
+    {name:"The pageant director", text:"\"We built a competition celebrating heritage and let something like this slip through. That's on us, not the contestants alone. We have to fix the process, not just apologise once.\""},
+    {name:"A viewer watching at home", text:"\"Honestly, I don't know enough about Indigenous traditions to judge instantly — but I trust that if someone from that community says it was hurtful, that matters more than my first impression.\""},
+  ];
+  const roleGrid = document.getElementById('roleGrid');
+  roles.forEach(r=>{
+    const card = document.createElement('div');
+    card.className='role-card';
+    card.innerHTML = `<h4>${r.name}</h4><p class="toggle-hint">Tap to hear their view →</p><p>${r.text}</p>`;
+    card.addEventListener('click', ()=>card.classList.toggle('open'));
+    roleGrid.appendChild(card);
+  });
+
+  // ---------- TASK 3: Scenarios ----------
+  const scenarios = [
+    {letter:"A", text:"A fashion student in Oslo builds a graduation collection using patterns inspired by traditional Sámi design, without contacting any Sámi designers or artists."},
+    {letter:"B", text:"A visitor to Canada buys a headdress replica from a shop that is Indigenous-owned and licensed to sell such items, and later displays it at home as art."},
+    {letter:"C", text:"A global pop star wears a bindi purely as a fashion accessory in a music video, with no reference to its religious meaning in Hinduism."},
+    {letter:"D", text:"A taco restaurant outside Mexico credits Mexican chefs by name, employs Mexican staff, and donates part of its profits to a Mexican cultural centre."},
+    {letter:"E", text:"A school holds an \"international day\" where students are invited to share and explain their own family's traditional clothing to their classmates."},
+  ];
+  const scenarioContainer = document.getElementById('scenarioContainer');
+  scenarios.forEach(s=>{
+    const div = document.createElement('div');
+    div.className='scenario';
+    div.innerHTML = `<h4><span class="letter">${s.letter}</span>${s.text}</h4>
+      <div class="judge-row">
+        <button class="judge-btn">Appreciation</button>
+        <button class="judge-btn">Hard to say</button>
+        <button class="judge-btn">Appropriation</button>
+      </div>
+      <textarea rows="2" placeholder="Why? Use the framework above to justify your answer."></textarea>`;
+    div.querySelectorAll('.judge-btn').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        div.querySelectorAll('.judge-btn').forEach(b=>b.classList.remove('chosen'));
+        btn.classList.add('chosen');
+      });
+    });
+    scenarioContainer.appendChild(div);
+  });
+
+  // ---------- TASK 4: Debate slider ----------
+  function updateDebate(val){
+    let label;
+    if(val < 30) label = val + " — leaning toward an honest mistake";
+    else if(val > 70) label = val + " — leaning toward deliberate disrespect";
+    else label = val + " — somewhere in the middle";
+    document.getElementById('debateReadout').textContent = label;
+  }
+
+  // ---------- TASK: media outlet choice chips (pick 2) ----------
+  const mediaOutlets = ["CBC News", "New York Post", "The Independent"];
+  const mediaChoiceEl = document.getElementById('mediaChoice');
+  let mediaChosen = [];
+  mediaOutlets.forEach(name=>{
+    const chip = document.createElement('button');
+    chip.className = 'prompt-chip';
+    chip.textContent = name;
+    chip.addEventListener('click', ()=>{
+      if(chip.classList.contains('chosen')){
+        chip.classList.remove('chosen');
+        mediaChosen = mediaChosen.filter(m=>m!==name);
+      } else {
+        if(mediaChosen.length >= 2) return;
+        chip.classList.add('chosen');
+        mediaChosen.push(name);
+      }
+    });
+    mediaChoiceEl.appendChild(chip);
+  });
+
+  // ---------- TASK 5 (Write It): writing prompts ----------
+  const prompts = [
+    {label:"Apology post", text:"Write the Instagram caption Karisa might post the morning after the pageant, in her own words, explaining what she now understands."},
+    {label:"Speech notes", text:"Write Ashley Callingbull's short backstage speech notes — three sentences she wants to be sure to say, and why each one matters."},
+    {label:"Editorial letter", text:"Write a short letter to a newspaper editor giving your own view on whether the pageant's response (guidelines + a liaison role) is enough."},
+  ];
+  const promptSelect = document.getElementById('promptSelect');
+  const promptText = document.getElementById('promptText');
+  prompts.forEach((p,i)=>{
+    const chip = document.createElement('button');
+    chip.className='prompt-chip';
+    chip.textContent = p.label;
+    chip.addEventListener('click', ()=>{
+      promptSelect.querySelectorAll('.prompt-chip').forEach(c=>c.classList.remove('chosen'));
+      chip.classList.add('chosen');
+      promptText.textContent = p.text;
+    });
+    promptSelect.appendChild(chip);
+    if(i===0){ chip.classList.add('chosen'); promptText.textContent = p.text; }
+  });
+
+  // ---------- CONNECTIONS GAME ----------
+  const connCategories = [
+    {name:"Showing respect", color:"#8FBF8B", words:["CONSULT","CREDIT","INVITE","HONOUR"]},
+    {name:"Taking without permission", color:"#D98B7B", words:["EXPLOIT","STEAL","MISUSE","DISRESPECT"]},
+    {name:"Sacred or ceremonial items", color:"#6FA3D8", words:["HEADDRESS","REGALIA","BINDI","TOTEM"]},
+    {name:"Owning a mistake", color:"#E7A93A", words:["ACKNOWLEDGE","APOLOGISE","RESPONSIBILITY","ACCOUNTABILITY"]},
+  ];
+  let connWords = [];
+  connCategories.forEach((c,ci)=>{
+    c.words.forEach(w=>connWords.push({word:w, cat:ci}));
+  });
+  connWords.sort(()=>Math.random()-0.5);
+  let connSelected = [];
+  let connSolvedCats = [];
+  let connMistakesLeft = 4;
+
+  function renderConnGrid(){
+    const grid = document.getElementById('connGrid');
+    grid.innerHTML = '';
+    connWords.forEach(item=>{
+      const tile = document.createElement('button');
+      tile.className = 'conn-tile';
+      tile.textContent = item.word;
+      tile.dataset.word = item.word;
+      if(connSolvedCats.includes(item.cat)){ tile.classList.add('solved'); }
+      if(connSelected.includes(item.word)){ tile.classList.add('selected'); }
+      tile.addEventListener('click', ()=>toggleConnTile(item.word));
+      grid.appendChild(tile);
+    });
+  }
+
+  function toggleConnTile(word){
+    if(connSelected.includes(word)){
+      connSelected = connSelected.filter(w=>w!==word);
+    } else {
+      if(connSelected.length >= 4) return;
+      connSelected.push(word);
+    }
+    renderConnGrid();
+    document.getElementById('connStatus').textContent = connSelected.length===4
+      ? 'Ready — press Check.' : `Selected ${connSelected.length}/4.`;
+  }
+
+  function deselectAllConn(){ connSelected = []; renderConnGrid(); document.getElementById('connStatus').textContent='Select 4 words, then press Check.'; }
+  function shuffleConn(){ connWords.sort(()=>Math.random()-0.5); renderConnGrid(); }
+
+  function checkConnections(){
+    const status = document.getElementById('connStatus');
+    if(connSelected.length !== 4){ status.textContent = 'Pick exactly 4 words first.'; return; }
+    const cats = connSelected.map(w => connWords.find(x=>x.word===w).cat);
+    const allSame = cats.every(c => c === cats[0]);
+    if(allSame){
+      connSolvedCats.push(cats[0]);
+      const cat = connCategories[cats[0]];
+      const solvedDiv = document.getElementById('connSolved');
+      const row = document.createElement('div');
+      row.className = 'conn-solved-row';
+      row.style.background = cat.color;
+      row.innerHTML = `<span class="cat-name">${cat.name}</span><span>${cat.words.join(' · ')}</span>`;
+      solvedDiv.appendChild(row);
+      connSelected = [];
+      status.textContent = connSolvedCats.length===4 ? 'Solved it all — great work!' : 'Correct! Find the next group.';
+      renderConnGrid();
+    } else {
+      connMistakesLeft--;
+      document.getElementById('connMistakes').textContent = `Mistakes remaining: ${connMistakesLeft}`;
+      document.querySelectorAll('.conn-tile.selected').forEach(t=>t.classList.add('shake'));
+      status.textContent = 'Not a group — try again.';
+      setTimeout(()=>{document.querySelectorAll('.conn-tile.shake').forEach(t=>t.classList.remove('shake'));}, 350);
+      if(connMistakesLeft <= 0){
+        status.textContent = 'Out of tries — here are the answers:';
+        connCategories.forEach((cat,ci)=>{
+          if(!connSolvedCats.includes(ci)){
+            connSolvedCats.push(ci);
+            const solvedDiv = document.getElementById('connSolved');
+            const row = document.createElement('div');
+            row.className = 'conn-solved-row';
+            row.style.background = cat.color;
+            row.innerHTML = `<span class="cat-name">${cat.name}</span><span>${cat.words.join(' · ')}</span>`;
+            solvedDiv.appendChild(row);
+          }
+        });
+        connSelected = [];
+        renderConnGrid();
+      }
+    }
+  }
+  renderConnGrid();
+
+  function updateWordCount(){
+    const val = document.getElementById('writingArea').value.trim();
+    const count = val === '' ? 0 : val.split(/\s+/).length;
+    document.getElementById('wordCount').textContent = count + ' words';
+  }
+</script>
+</body>
+</html>
